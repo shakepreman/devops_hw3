@@ -54,7 +54,7 @@ app.get('/meow', function(req, res) {
 	{
 		res.writeHead(200, {'content-type':'text/html'});
 		var imagedata
-		client.lindex("img_queue", 0,function(err, reply){
+		client.rpop("img_queue", function(err, reply){
 			if(err) console.log(err)
 			console.log(reply)
 			res.write("<h1>\n<img src='data:my_pic.jpg;base64,"+reply+"'/>");
@@ -63,15 +63,6 @@ app.get('/meow', function(req, res) {
 	}
 })
 
-app.get('/remove', function(req, res) {
-	{
-		res.writeHead(200, {'content-type':'text/html'});
-		var imagedata
-		client.lpop("img_queue")
-		res.write("<h1>Removing image</h1>");
-		res.end();	
-	}
-})
 
 // HTTP SERVER
 var server = app.listen(3000, function () {
@@ -112,12 +103,6 @@ app.get('/get', function(req, res) {
 
 app.get('/recent', function(req, res) {
 	client.lrange("history",0,4,function(err, reply){
-		res.send(reply);
-	});  
-})
-
-app.get('/recent1', function(req, res) {
-	client.lrange("img_queue",0,4,function(err, reply){
 		res.send(reply);
 	});  
 })
