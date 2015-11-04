@@ -14,3 +14,6 @@ Visit the following URLs at `localhost/<url>` or `localhost:3000/<url>` or `loca
 * /recent: Displays a lit of the lastest 5 URLs visited.
 * /upload: Use the curl command `curl -F "image=@./img/<filename>" localhost:3000/upload` to upload an image to the image queue.
 * /meow: Displays the most recent image pushed into the queue and also remove it
+
+### Screencast:
+https://youtu.be/Ym3jWNF1zRg 
