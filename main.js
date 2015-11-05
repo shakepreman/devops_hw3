@@ -2,8 +2,9 @@ var redis = require('redis')
 var multer  = require('multer')
 var express = require('express')
 var fs      = require('fs')
+var http = require('http')
+var appProxy = require('http-proxy')
 var app = express()
-var appProxy = express()
 // REDIS
 var client = redis.createClient(6379, '127.0.0.1', {})
 var length
@@ -23,15 +24,17 @@ app.use(function(req, res, next)
 	next(); // Passing the request to the next handler in the stack.
 });
 
-appProxy.use(function(req, res, next)
+var httpServer = http.createServer(function(req, res)
 {
 	client.rpoplpush('urlQueue', 'urlQueue', function(err, reply) {
 		console.log(reply);
 		console.log(req.url)
-		res.redirect(reply+req.url)
+		var proxyServer = appProxy.createProxyServer({target: reply})
+		proxyServer.web(req, res)
 	})
 })
 
+httpServer.listen(80)
 
 app.post('/upload',[ multer({ dest: './uploads/'}), function(req, res){
    console.log(req.body) // form fields
@@ -79,12 +82,6 @@ var server2 = app.listen(3001, function () {
   var port = server2.address().port
   client.lpush("urlQueue", "http://localhost:"+port)
   console.log('Example app listening at http://%s:%s', host, port)
-})
-
-var serverProxy = appProxy.listen(80, function () {
-	var host = serverProxy.address().address
-	var port = serverProxy.address().port
-	console.log('Example Proxy listening at http://%s:%s', host, port)
 })
 
 app.get('/', function(req, res) {

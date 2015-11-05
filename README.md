@@ -16,4 +16,4 @@ Visit the following URLs at `localhost/<url>` or `localhost:3000/<url>` or `loca
 * /meow: Displays the most recent image pushed into the queue and also remove it
 
 ### Screencast:
-https://youtu.be/Ym3jWNF1zRg 
+https://youtu.be/Yxtm8gDbJy0
